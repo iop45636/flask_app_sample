@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 app = Flask(__name__)
 #Setup mysql connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'Your DB URL'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@127.0.0.1:3306/python_mysql'
 #Setup secret key
 app.config['SECRET_KEY']='djashfuisdhfuisdhf'
 #Setup db use ORM models
