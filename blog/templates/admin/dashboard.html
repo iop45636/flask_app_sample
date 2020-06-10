@@ -53,8 +53,32 @@
               <td>{{ post.pub_date.strftime('%Y %B, %d') }}</td>
               <td><img src="{{url_for('static', filename='images/'+post.image)}}" width="50"></td>
               <td><a href="{{url_for('updatepost', id=post.id)}}" class="btn btn-sm btn-success">Edit</a></td>
-              <td><a href="{{url_for('updatepost', id=post.id)}}" class="btn btn-sm btn-danger">Delete</a></td>
+              <td><button type="button" id="#del{{post.id}}" class="btn btn-primary btn-danger btn-sm" data-toggle="modal" data-target="#del{{post.id}}">
+                Delete
+              </button></td>
             </tr>
+
+
+<!-- Modal -->
+<div class="modal fade" id="del{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure That you wnat to delete thsi post?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{post.title}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+        <a href="delete/{{post.id}}" class="btn btn-primary btn-danger btn-sm">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
             {% endfor %}
           </tbody>
         </table>

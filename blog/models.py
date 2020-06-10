@@ -41,3 +41,15 @@ class Post(db.Model):
             target.slug = slugify(value)
 
 db.event.listen(Post.title, 'set', Post.generat_slug, retval=False)
+
+class Comment(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50),unique=False)
+    email = db.Column(db.String(120), unique=False, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'),nullable=False)
+    post = db.relationship('Post',backref=db.backref('post', lazy=True))
+    pub_date = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
+    status  = db.Column(db.Boolean, default=False)
+    def __repr__(self):
+        return '<User %r>' % self.username

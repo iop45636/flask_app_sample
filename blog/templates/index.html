@@ -12,9 +12,6 @@
 								<img class="img-fluid" src="{{ url_for('static', filename='images/'+post.image) }}" alt="">
 							</div>
 							<div class="top-post-details">
-								<ul class="tags">
-									<li><a href="#">Click here</a></li>
-								</ul>
 								<a href="/post/{{post.id}}/{{post.slug}}">
 									<h3>{{ post.title }}</h3>
 								</a>
@@ -34,9 +31,7 @@
 									<img class="img-fluid" src="{{ url_for('static', filename='images/'+post.image) }}" style="height: px; margin-bottom:5px;" alt="">
 								</div>
 								<div class="top-post-details">
-									<ul class="tags">
-										<li><a href="#">Click here</a></li>
-									</ul>
+
 									<a href="/post/{{post.id}}/{{post.slug}}">
 										<h4>{{ post.title }}</h4>
 									</a>

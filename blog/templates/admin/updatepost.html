@@ -33,6 +33,7 @@
                     <input type="text", name="title" class="form-control mb-2" placeholder="Enter Your title"
                      value="{{post.title}}" required>
                     <textarea name="content" class="form-control" rows="10" cols="20">{{post.body}}</textarea>
+                    <a href="{{url_for('static', filename='images/'+post.image)}}">{{url_for('static', filename='images/'+post.image)}}</a>
                     <input type="file", name="photo" accept="image/*" class="form-control mt-2" required>
                 
                     <input type="submit" value="Edit Post" class="btn btn-info mt-3">

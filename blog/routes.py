@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, current_app
 from blog import app, db, bycrpt, login_manager
 from flask_login import login_user, login_required, current_user, logout_user
-from blog.models import User, Post
+from blog.models import User, Post, Comment
 #these package for handle images from app and db
 import os
 import secrets
@@ -26,7 +26,22 @@ def home():
 def post(post_id, slug):
    post = Post.query.get_or_404(post_id)
    posts = Post.query.order_by(Post.id.desc()).all()
-   return render_template('image-post.html', post=post,posts=posts)
+   comments = Comment.query.filter_by(post_id=post.id).all()
+   post.view += 1
+   db.session.commit()
+
+   if  request.method=="POST":
+     name = request.form.get('name') 
+     email = request.form.get('email')
+     message = request.form.get('message')
+     comment = Comment(name=name, email=email, message=message, post_id=post.id)
+     db.session.add(comment)
+     post.comments += 1
+     flash('Your comments has submited', 'success')
+     db.session.commit()
+     return redirect(request.url)
+     
+   return render_template('image-post.html', post=post,posts=posts,comments=comments)
 
 #user signup
 @app.route('/register', methods=['POST', 'GET'])
@@ -118,9 +133,64 @@ def addpsot():
 def updatepost(id):
    post =Post.query.get_or_404(id)
    if request.method=="POST":
+      if request.file.get('photo'):
+         try:
+            os.unlink(os.path.join(current_app.root_path, 'static/images', post.image))
+            post.image = save_images(request.files.get('photo'))
+         except:
+            post.image = save_images(request.files.get('photo'))
+   if request.method=="POST":
       post.title = request.form.get('title')
       post.body = request.form.get('content')
       db.session.commit()
       flash('post updated', 'success')
       return redirect(url_for('dashboard'))
    return render_template('admin/updatepost.html', post=post)
+
+
+@app.route('/delete/<id>', methods=['POST','GET'])
+@login_required
+def delete(id):
+   post =Post.query.get_or_404(id)
+   try:
+      os.unlink(os.path.join(current_app.root_path, 'static/images', post.image))
+      db.session.delete(post)
+   except:
+      db.session.delete(post)
+
+   db.session.commit()
+   flash('Post has deleted', 'success')
+   return redirect(url_for('dashboard'))
+
+#template route
+@app.route('/archive')
+def archive():
+   return render_template('archive.html')
+
+@app.route('/category')
+def category():
+   return render_template('category.html')
+
+@app.route('/standard-post')
+def standard_post():
+   return render_template('standard-post.html')
+
+@app.route('/image-post')
+def image_post():
+   return render_template('image-post.html')
+
+@app.route('/gallery-post')
+def gallery_post():
+   return render_template('gallery-post.html')
+
+@app.route('/video-post')
+def video_post():
+   return render_template('video-post.html')
+
+@app.route('/about')
+def about():
+   return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+   return render_template('contact.html')
